@@ -37,9 +37,10 @@ build_it ()
     echo ' I am in ' `pwd`
     echo "DL_DIR=\"$DOWNLOADS\" ">> conf/local.conf
     echo "MACHINE=\"$MACHINE\" ">> conf/local.conf
+    echo "SSTATE_DIR=\"$TOPDIR/SRC/$BRANCH/sstate-cache\" ">> conf/local.conf
     for t in $TARGETS; do
 	echo "ME BUILD $t"
-	time bitbake $t
+	bitbake $t
     done
 
 }
