@@ -1,7 +1,8 @@
 #!/bin/bash
 
 TOPDIR=`pwd`
-DOWNLOADS="/big/DL_DIR"
+DOWNLOADS="$TOPDIR/DL_DIR"
+LOGFILE="create_SSTATE.log"
 usage()
 {
   echo "Usage:$0 <BRANCH> <MACHINE> TARGETS"
@@ -14,19 +15,25 @@ POKY="http://git.yoctoproject.org/git/poky"
 
 clone_it ()
 {
-
+    DEPTH=1
+    Q="--quiet"
     mkdir -p $TOPDIR/SRC/$BRANCH
     cd $TOPDIR/SRC/$BRANCH
     if [ ! -d poky ]; then
-	git clone $POKY
+	echo "Cloning $BRANCH"
+	git clone ${Q} --depth=${DEPTH} $POKY
+    else
+	echo "Fetching $BRANCH"
+	git fetch --all --depth=${DEPTH} ${Q}
     fi
     cd poky
-    git fetch --all
-    git reset --hard HEAD
-    git checkout origin/$BRANCH
-    git branch -D $BRANCH
-    git checkout -b $BRANCH origin/$BRANCH
-    git clean -fdx
+
+    git reset --hard HEAD ${Q}
+    git checkout ${Q} origin/$BRANCH
+    git branch -D ${Q} $BRANCH
+    git checkout ${Q} -b $BRANCH origin/$BRANCH
+    echo "Cleaning $BRANCH"
+    git clean ${Q} -fdx
 }
 
 build_it ()
