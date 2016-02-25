@@ -22,12 +22,12 @@ clone_it ()
     if [ ! -d poky ]; then
 	echo "Cloning $BRANCH"
 	git clone ${Q} --depth=${DEPTH} $POKY
+	cd poky
     else
 	echo "Fetching $BRANCH"
+	cd poky
 	git fetch --all --depth=${DEPTH} ${Q}
     fi
-    cd poky
-
     git reset --hard HEAD ${Q}
     git checkout ${Q} origin/$BRANCH
     git branch -D ${Q} $BRANCH
@@ -40,7 +40,7 @@ build_it ()
 {
     cd $TOPDIR/SRC/$BRANCH
     rm -rf build
-    source ./poky/oe-init-build-env
+    source ./poky/oe-init-build-env >> /dev/null
     echo ' I am in ' `pwd`
     echo "DL_DIR=\"$DOWNLOADS\" ">> conf/local.conf
     echo "MACHINE=\"$MACHINE\" ">> conf/local.conf
